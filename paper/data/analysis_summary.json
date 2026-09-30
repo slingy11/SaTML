@@ -1,0 +1,11 @@
+{
+  "verified_files": 55,
+  "honest_contrasts": 18,
+  "honest_max_individual_upper": 0.08093478557032839,
+  "honest_max_family_upper": 0.12316123618942666,
+  "craft_contrasts": 12,
+  "craft_max_individual_upper": 0.04624920613908518,
+  "craft_max_family_upper": 0.0673808557754255,
+  "stealth_min_family_lower": 0.19553602984920473,
+  "note": "Post-hoc approximate Bonferroni percentile bounds; 50000 crossed draws. Original results unchanged."
+}

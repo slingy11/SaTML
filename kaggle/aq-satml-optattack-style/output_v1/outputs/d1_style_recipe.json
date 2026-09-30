@@ -1,0 +1,29 @@
+{
+  "concept": "style",
+  "quants": [
+    "int4_g128",
+    "nf4_g64",
+    "w8a8_sq"
+  ],
+  "alpha": 0.5,
+  "seeds": [
+    11,
+    22,
+    33,
+    44,
+    55,
+    66,
+    77,
+    88,
+    99,
+    110,
+    121,
+    132
+  ],
+  "n_prompts": 16,
+  "steps": 25,
+  "w8a8_path": "native INT8 (torch._int_mm) after deployer recalibration on the received weights",
+  "weight_only_path": "dequantized weight-only codes, FP16 compute",
+  "crafted_quantized": "identical deployed weights to original (asserted), so original|q is also crafted|q",
+  "selection": "D0 embedding-space objective on disjoint fit prompts; no test images"
+}

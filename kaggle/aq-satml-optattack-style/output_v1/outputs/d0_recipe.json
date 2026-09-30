@@ -1,0 +1,29 @@
+{
+  "alpha": 0.5,
+  "deployer_half": "perm(seed 0)[128:] of the 256-caption pool",
+  "quants": [
+    "w8a8_sq",
+    "int8_wo",
+    "int4_g128",
+    "nf4_g64"
+  ],
+  "editors": [
+    "uce",
+    "time"
+  ],
+  "max_iter": 4000,
+  "gap_tol": 0.0001,
+  "fit_prompts": {
+    "style": 96,
+    "nudity": 96
+  },
+  "benign_fit": 96,
+  "test_prompts": {
+    "style": 16,
+    "nudity": 16
+  },
+  "benign_test": 64,
+  "objective": "min ||(X-Delta)E_fit||_F over the exact deployed-collision box; resid is relative to ||Delta E||",
+  "certificate": "fit_resid_certified_lb: Frank-Wolfe lower bound on the optimal fit residual",
+  "note": "test sets are disjoint from fit sets; nudity test = I2P sexual top-16 used in A7/A9"
+}

@@ -1,0 +1,39 @@
+\section{Conclusion}
+Whether quantization undermines concept erasure depends on the bit width, and the
+reason can be computed before generating any images. For closed-form cross-attention
+edits, image behavior is a function of the key/value outputs, and the set of
+checkpoints that deploy exactly as the original is a box. Together these turn the
+reconstruction question into a certifiable convex program over the original-pattern
+box. At 8 bits that box is narrow: the best reconstruction reproduces about 40\% of the
+erasure's key/value effect, and the resulting checkpoint scores like the unedited model
+in FP16. At 4 bits it is wide enough that the constructed checkpoint scores close to
+the honest erasure in FP16 yet restores the erased concept after deployment. Honest erasures show no significant deployment gap at any tested
+precision, but whole-UNet INT4 hints at a prompt-dependent passive re-emergence of
+nudity that deserves a powered follow-up. Deployers who quantize
+erased models to 4 bits should audit the quantized model, or run the image-free
+key/value audit against the base model, rather than trust a full-precision
+evaluation.
+
+\section*{Open Science}
+All code, per-image scores, run manifests with result and source hashes, the ordered
+prompt lists, and the scripts that regenerate every table and figure from the stored
+outputs are provided in the anonymous artifact at [ANONYMOUS ARTIFACT URL]. The CPU
+feasibility analysis (Section~\ref{sec:feasibility}) reruns from the public SD-1.5
+weights and the stored calibration statistics without a GPU. Base models, detectors,
+and prompt sets are obtained from their original distributions under their licenses;
+generated images are not redistributed.
+
+\section*{LLM Usage Considerations}
+An LLM-based coding assistant helped with source inspection, analysis scripts, and
+editing of this manuscript. All experiments were executed by the authors'
+code, all numbers are produced by deterministic scripts from stored outputs, and the
+authors verified the methods, proofs, references, and conclusions.
+
+\section*{Ethical Considerations}
+The nudity study measures a detector-defined suppression target and does not equate
+nudity with harm. The pipeline's safety checker is disabled to measure the edited
+generator itself. Generated images are scored in temporary storage, deleted, and not
+released. Our attack construction is a known class (quantization-conditioned
+weights~\cite{egashira2024}) applied to erasure. We release it together with the
+certificate and the image-free audit of Section~\ref{sec:audit}, which lets a deployer
+flag such checkpoints before deployment without generating images.

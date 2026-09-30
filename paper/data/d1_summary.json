@@ -1,0 +1,44 @@
+{
+  "style|w8a8_sq": {
+    "attack_fp16": 0.8432416619422535,
+    "attack_deployed": 0.8719796522830924,
+    "erased_fp16": 0.5041244084810993,
+    "erased_deployed": 0.5004286765082119,
+    "original_fp16": 0.8702159496024251
+  },
+  "style|int4_g128": {
+    "attack_fp16": 0.48881507602830726,
+    "attack_deployed": 0.8565610169122616,
+    "erased_fp16": 0.5041244084810993,
+    "erased_deployed": 0.5398381276609143,
+    "original_fp16": 0.8702159496024251
+  },
+  "style|nf4_g64": {
+    "attack_fp16": 0.5055568374421758,
+    "attack_deployed": 0.874538033735007,
+    "erased_fp16": 0.5041244084810993,
+    "erased_deployed": 0.48796212663485977,
+    "original_fp16": 0.8702159496024251
+  },
+  "nudity|w8a8_sq": {
+    "attack_fp16": 0.5807140249138077,
+    "attack_deployed": 0.5906563960015774,
+    "erased_fp16": 0.17348066919172803,
+    "erased_deployed": 0.18314487533643842,
+    "original_fp16": 0.5953685518664619
+  },
+  "nudity|int4_g128": {
+    "attack_fp16": 0.1680583474226296,
+    "attack_deployed": 0.5946323818837603,
+    "erased_fp16": 0.17348066919172803,
+    "erased_deployed": 0.1929075956965486,
+    "original_fp16": 0.5953685518664619
+  },
+  "nudity|nf4_g64": {
+    "attack_fp16": 0.20682940647626916,
+    "attack_deployed": 0.5820617970700065,
+    "erased_fp16": 0.17348066919172803,
+    "erased_deployed": 0.17170348344370723,
+    "original_fp16": 0.5953685518664619
+  }
+}

@@ -1,0 +1,76 @@
+% XeTeX (tectonic): declare Times (TeX Gyre Termes) as TU/ptm before IEEEtran loads,
+% so fonts the class preloads at load time are Times rather than a fallback.
+\DeclareFontFamily{TU}{ptm}{}
+\DeclareFontShape{TU}{ptm}{m}{n}{<->"[texgyretermes-regular.otf]/OT:mapping=tex-text"}{}
+\DeclareFontShape{TU}{ptm}{m}{it}{<->"[texgyretermes-italic.otf]/OT:mapping=tex-text"}{}
+\DeclareFontShape{TU}{ptm}{b}{n}{<->"[texgyretermes-bold.otf]/OT:mapping=tex-text"}{}
+\DeclareFontShape{TU}{ptm}{b}{it}{<->"[texgyretermes-bolditalic.otf]/OT:mapping=tex-text"}{}
+\DeclareFontShape{TU}{ptm}{bx}{n}{<->ssub*ptm/b/n}{}
+\DeclareFontShape{TU}{ptm}{bx}{it}{<->ssub*ptm/b/it}{}
+\DeclareFontShape{TU}{ptm}{m}{sc}{<->ssub*ptm/m/n}{}
+\documentclass[conference]{IEEEtran}
+\usepackage{iftex}
+\ifXeTeX
+  \usepackage{fontspec}
+  \setmainfont{texgyretermes}[Extension=.otf, UprightFont=*-regular,
+    BoldFont=*-bold, ItalicFont=*-italic, BoldItalicFont=*-bolditalic, NFSSFamily=ptm]
+\else
+  \usepackage[T1]{fontenc}
+  \usepackage{mathptmx}
+\fi
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx,booktabs,url,xcolor}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{proposition}{Proposition}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\FP}{\mathrm{FP16}}
+\newcommand{\Drob}{D_{\mathrm{rob}}}
+\newcommand{\TBD}[1]{\textcolor{red}{[#1]}}
+\makeatletter
+\newcommand{\tableinput}[1]{\@@input #1 }
+\makeatother
+\title{From Weight Collisions to Behavior:\\Auditing Quantized Concept Erasure in Diffusion Models}
+\author{\IEEEauthorblockN{Anonymous Authors}}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Can post-training quantization undermine concept erasure in diffusion models?
+A supplier could ship weights that appear erased in full precision but whose
+quantized form is the unedited model. We characterize scale-preserving collisions
+for erasers that edit cross-attention key and value maps. Because those maps see only
+text embeddings, generated images depend on the edit solely through its key/value
+outputs. The full collision set is a union of boxes; within the box that retains the
+original arg-max coordinates, a convex program certifies the best reconstruction of
+this edit's key/value outputs, not optimal behavioral stealth. On Stable Diffusion 1.5
+with UCE erasure of Van Gogh style and nudity, the constructed 8-bit checkpoints,
+with or without SmoothQuant, reproduce 34--42\% of the erasure's measured key/value
+effect and score like the unedited model in FP16. At 4 bits (INT4 and NF4), the
+constructed checkpoints show substantial recovery: with 192 images
+per condition from 12 crossed seeds and 16 prompts, the crafted nudity checkpoint
+scores 0.168 in FP16 against 0.173 for the honest erasure but 0.595 after
+quantization, matching the unedited model. Honest erasures show no
+significant deployment gap under any tested recipe, including native INT8 and
+whole-UNet W8A8, INT4, and NF4, although whole-UNet INT4 raises the nudity score by a
+prompt-dependent $+0.11$ that our 64-image control cannot resolve. We also derive an image-free audit that
+compares full-precision and quantized key/value outputs against the base model. It
+separates the evaluated 4-bit attacks from honest checkpoints at 2.2--3.3 times
+the honest value; it is not a calibrated general detector.
+\end{abstract}
+
+\input{sec_intro}
+\input{sec_setting}
+\input{sec_theory}
+\input{sec_feasibility}
+\input{sec_behavior}
+\input{sec_audit}
+\input{sec_related}
+\input{sec_limits}
+\input{sec_closing}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\appendices
+\input{sec_appendix}
+\end{document}

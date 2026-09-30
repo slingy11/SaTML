@@ -1,0 +1,48 @@
+{
+  "levers": [
+    {
+      "lever": "K1_fused_vs_fake_fp16",
+      "max_abs": 0.004590511322021484,
+      "mean_abs": 0.0003741694672498852,
+      "rel_to_output": 0.0004317182465456426
+    },
+    {
+      "lever": "K1b_fused_vs_fake_fp32",
+      "max_abs": 1.6242265701293945e-06,
+      "mean_abs": 1.780236829063142e-07,
+      "rel_to_output": 1.6049244777605054e-07
+    },
+    {
+      "lever": "K2_fake_fp16_vs_fp32",
+      "max_abs": 0.004590272903442383,
+      "mean_abs": 0.00037416892882902175,
+      "rel_to_output": 0.00043171907600481063
+    },
+    {
+      "lever": "hypothetical_int16_acc_saturation",
+      "max_abs": 2.828333258628845,
+      "mean_abs": 0.016531983390450478,
+      "rel_to_output": 0.022014359012246132
+    },
+    {
+      "lever": "hypothetical_per_tile_act_scale",
+      "max_abs": 0.29260265827178955,
+      "mean_abs": 0.026371280662715435,
+      "rel_to_output": 0.028883513063192368
+    },
+    {
+      "lever": "quant_error_vs_fp32",
+      "max_abs": 0.29736901819705963,
+      "mean_abs": 0.028282485902309418,
+      "rel_to_output": 0.03056240640580654
+    }
+  ],
+  "fake_vs_fused_over_floor": 0.013229723460034757,
+  "int_mm": {
+    "device": "cuda",
+    "has_int_mm": true,
+    "native_path_available": true,
+    "int_mm_ok": true,
+    "max_int_diff": 0
+  }
+}

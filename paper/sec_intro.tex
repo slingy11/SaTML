@@ -1,0 +1,55 @@
+\section{Introduction}
+Concept erasure edits a text-to-image model so that it stops producing a target
+concept, such as an artist's style or nudity. Erased checkpoints are audited in full
+precision, but they are often deployed after post-training quantization. The audited
+object and the deployed program therefore differ. Two failure modes follow. Passively,
+quantization may round a small edit back toward the original weights, as reported for
+LLM unlearning at 4 bits~\cite{zhang2025}. Adversarially, a supplier may ship weights
+that look erased in full precision but deploy as the unedited model, extending
+quantization-conditioned attacks on LLMs~\cite{egashira2024,egashira2025} to erasure.
+
+We study both on Stable Diffusion~1.5 with Unified Concept Editing
+(UCE)~\cite{uce}, which edits only the 32 cross-attention key and value
+projections. This restriction is useful rather than limiting. The inputs to these
+projections are text-encoder embeddings that do not depend on the UNet, so the edit's
+entire behavioral effect passes through a linear map that we can analyze exactly.
+Our contributions are:
+
+\begin{itemize}
+\item \textbf{A characterization of deployed collisions.} Scale-preserving shipped
+weights that deploy like the original form a union of boxes indexed by the coordinates
+attaining row and column maxima (Prop.~\ref{prop:box}). Pinning the original arg-max
+pattern yields one box with both row and column caps. This constraint explains why an
+earlier iterative construction stalled at 83--84\% code agreement; the new constructed
+checkpoints attain exact agreement.
+\item \textbf{Optimal reconstruction in a specified box.} Because images depend on
+the edited weights only through their key/value outputs, we solve a convex program
+for the best reconstruction of this edit within the original-pattern box
+(Eq.~\ref{eq:capacity}). Its duality gap certifies reconstruction in that box on the fit
+prompts, not optimal behavioral stealth or the full union. We compute it for W8A8,
+INT8, INT4, and NF4.
+\item \textbf{A paired behavioral evaluation.} Using identical prompts and seeds across
+FP16, simulated W8A8, native INT8, and 4-bit paths, with a crossed seed--prompt
+bootstrap, we measure honest deployment gaps for style and nudity erasure and evaluate
+the optimal attack with a stealth-first criterion.
+\item \textbf{An image-free diagnostic.} Conditional on key/value reconstruction,
+we bound a deployment-change statistic (Prop.~\ref{prop:audit}) and measure how it
+separates the evaluated attacks from honest checkpoints without generating images.
+\end{itemize}
+
+The results split cleanly by bit width. At 8 bits, with or without SmoothQuant, only
+16\% of edited coordinates fit in the selected box. Its reconstruction optimum has
+a certified fit-prompt residual of at least 0.64, while the constructed checkpoint
+reproduces 34--42\% of the edit's measured effect on held-out prompts and scores
+like the unedited model in FP16. This is not a lower bound on the behavioral stealth
+of every feasible checkpoint. At 4 bits the constructed checkpoints show recovery on
+both concepts. The INT4 nudity checkpoint has an FP16 point score near the honest
+erasure (NudeNet
+0.168 against 0.173) but deploys bit-for-bit as the 4-bit original (0.595), a
+recovery of $+0.43$. The FP16 similarity is descriptive rather than established
+equivalence. Honest erasures, in contrast, show no significant deployment
+gap under any tested recipe, including whole-UNet W8A8, INT4, and NF4, and benign
+prompt alignment is unchanged. The one warning sign is whole-UNet INT4, which raises
+the honest nudity erasure's score by a prompt-dependent $+0.11$ that our 64-image
+control cannot resolve. The proposed diagnostic separates the evaluated 4-bit
+attacks at 2.2--3.3 times the honest value, without a calibrated false-positive rate.

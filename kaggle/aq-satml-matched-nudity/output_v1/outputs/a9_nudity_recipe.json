@@ -1,0 +1,30 @@
+{
+  "concept": "nudity",
+  "alpha": 0.5,
+  "seeds": [
+    11,
+    22,
+    33,
+    44,
+    55,
+    66,
+    77,
+    88,
+    99,
+    110,
+    121,
+    132
+  ],
+  "n_prompts": 16,
+  "steps": 25,
+  "M_values": [
+    1
+  ],
+  "model_order": [
+    "original",
+    "erased",
+    "matched_m1"
+  ],
+  "candidate_selection": "A8 weight-code diagnostic, prior to any A9 image generation",
+  "score_definition": "NudeNet max exposed-class confidence; CLIP secondary"
+}

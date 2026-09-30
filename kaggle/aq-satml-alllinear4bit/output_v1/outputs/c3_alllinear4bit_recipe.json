@@ -1,0 +1,20 @@
+{
+  "scope": "all 184 UNet nn.Linear, weight-only round-to-nearest, no calibration",
+  "quants": [
+    "int4_g64",
+    "nf4_g64"
+  ],
+  "seeds": [
+    11,
+    22,
+    33,
+    44,
+    55,
+    66,
+    77,
+    88
+  ],
+  "n_prompts": 8,
+  "steps": 25,
+  "note": "honest checkpoints only; no attacker construction. Group size 64 for both INT4 and NF4 so one recipe divides every UNet linear width."
+}

@@ -1,0 +1,75 @@
+\section{An Image-Free Deployment Audit}
+\label{sec:audit}
+A stealthy exact collision must look like the erasure in FP16 but deploy like the
+original. The same sufficiency argument that bounds the attack also exposes it. For a
+received checkpoint $W$ and embeddings $E_c$ of prompts naming the erased concept,
+define the audit statistic
+\begin{equation}
+ A(W)=\frac{\|(\mathcal{Q}(W)-W)E_c\|_F}{\|(\mathcal{Q}(W_0)-W_0)E_c\|_F},
+ \label{eq:audit}
+\end{equation}
+the deployment-induced change of the key/value outputs on concept prompts, relative
+to the same change for the public base model. It needs no images, no detector, and
+no knowledge of the honest edit. The restriction to concept prompts matters. On 64
+held-out benign COCO captions, the 4-bit attack's FP16 key/value outputs differ from
+the honest erasure's by only 11--30\% of the erasure's own (small) effect there, so
+generic benign-prompt checks do not separate the two checkpoints.
+
+\begin{proposition}[Stealth forces a large audit statistic]
+\label{prop:audit}
+Let $N=\mathcal{Q}(W_0)-W_0$. If $W_*=W_0+X$ is a scale-preserving exact collision
+whose FP16 outputs reproduce the edit up to residual
+$\|(X-\Delta)E_c\|_F\le r\|\Delta E_c\|_F$, then
+\begin{equation}
+ A(W_*)\ \ge\ (1-r)\,\frac{\|\Delta E_c\|_F}{\|NE_c\|_F}-1.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Since $\mathcal{Q}(W_*)=\mathcal{Q}(W_0)$, we have $(\mathcal{Q}(W_*)-W_*)E_c=(N-X)E_c$.
+By the triangle inequality, $\|(N-X)E_c\|\ge\|XE_c\|-\|NE_c\|$ and
+$\|XE_c\|\ge\|\Delta E_c\|-\|(X-\Delta)E_c\|\ge(1-r)\|\Delta E_c\|$.
+\end{proof}
+
+An honest erasure, by contrast, is quantized like any other checkpoint and should give
+$A\approx1$. Table~\ref{tab:audit} reports $A$ for the original model, the honest
+erasure, and the optimal attack on the held-out concept prompts.
+
+\begin{table}[t]
+\centering
+\caption{Image-free audit statistic $A$ (Eq.~\ref{eq:audit}) on held-out concept
+prompts. The denominator uses the public base model. The last column is the
+lower bound of Proposition~\ref{prop:audit} at the attack's measured residual.}
+\label{tab:audit}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llrrrr}
+\toprule
+Concept & Recipe & Original & Honest & Attack & Prop.~\ref{prop:audit}\\
+\midrule
+\tableinput{data/audit_rows.tex}
+\bottomrule
+\end{tabular}}
+\end{table}
+
+For honest erasure, $A$ is between 0.99 and 1.00 under every recipe: the erased
+checkpoint's key/value outputs on concept prompts move under quantization exactly as
+much as the base model's. The optimal attack gives $A=14.3$--$15.4$ at 8 bits and,
+more importantly, $A=2.2$--$3.3$ at 4 bits, where the attack succeeds behaviorally.
+The 4-bit margin is smaller because the base model's own 4-bit quantization noise is
+comparable to the edit, but it is still more than twice the honest value. The bound
+of Proposition~\ref{prop:audit} at the measured residual (last column) is
+conservative: it guarantees $A\ge0.75$--$1.84$ at 4 bits, while the attack measures
+2.2--3.3. At 8 bits the guaranteed value for the optimal attack (9.1--9.9) alone far exceeds
+the honest one. At 4 bits the guaranteed value for nudity (0.75) does not exceed
+the honest one, so an attacker that also minimizes $A$ could narrow the observed
+margin; the separation we report there is empirical. A deployer holding the base model can thus flag the successful attacks in
+Table~\ref{tab:attack} by comparing FP16 and quantized key/value outputs on a few
+concept prompts, without generating a single image.
+
+The audit is a diagnostic, not a certified defense: it separates the evaluated attacks
+from the evaluated honest checkpoints, and its false-positive rate across diverse
+honest edits is not established. An adversary could erase
+behavior through components the audit prompts do not exercise, or change the scales
+instead~\cite{zhan2026}. The statistic also presumes the deployer knows which concept
+was erased, which is usually stated on the model card. We report it because, unlike
+threshold rules on detector scores, its separation follows from the construction
+rather than from calibration on a handful of honest checkpoints.

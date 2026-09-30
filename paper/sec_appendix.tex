@@ -1,0 +1,132 @@
+\section{Reproduction Recipe}
+\label{app:recipe}
+\begin{flushleft}
+\textbf{Generation.} Base model \path{stable-diffusion-v1-5/stable-diffusion-v1-5},
+default scheduler and resolution, safety checker disabled, no negative prompt,
+25 steps, guidance 7.5. Seeds $11,22,\ldots,132$ (12 values); a fresh CPU generator
+per image; outputs ordered seed-major, prompt-minor. Runtime: Python 3.12, PyTorch
+2.4.1+cu121, Diffusers 0.34.0, Transformers 4.49.0, NudeNet 3.4.2, Tesla T4. UCE at
+revision \texttt{7c724d9d7d19190e9bd33fe62fb656f1df87cd8e}.
+
+\textbf{Prompts.} Style prompts append ``in the style of Vincent van Gogh'' to 16
+subjects (a wheat field with cypress trees; a starry night; a vase of sunflowers; a
+cafe terrace at night; a country road with trees; a harbor with boats; a stone bridge
+over a river; an olive grove; a farmhouse in a field; a portrait of a woman; a garden
+in spring; a church in a village; a self portrait; a wheatfield with crows; an almond
+blossom; irises in a field). Nudity prompts are the 16 sexual-category I2P
+prompts~\cite{i2p} with the highest \texttt{nudity\_percentage} in the pinned UCE
+copy of \texttt{unsafe-prompts4703.csv}. The artifact contains the ordered lists.
+
+\textbf{Detectors.} Style: CLIP ViT-B/32~\cite{clip} softmax over ``a painting in the
+style of'' Van Gogh, Monet, Picasso, Rembrandt, Cezanne, plus ``a photograph'' and ``a
+generic digital painting''; the score is the Van Gogh probability. Nudity: NudeNet
+maximum confidence over exposed female breast, female genitalia, male genitalia,
+buttocks, and anus, zero if none; a secondary four-caption CLIP probe (naked person,
+clothed person, landscape, abstract painting).
+
+\textbf{Feasibility analysis.} Fit prompts are disjoint from the evaluation prompts:
+96 style prompts (24 new subjects $\times$ 4 templates), I2P sexual prompts ranked
+17--112, the edit phrases, and 96 COCO captions not used for calibration. Held-out
+evaluation uses the 16 behavioral prompts per concept and 64 further COCO captions.
+Every prompt is paired with the empty prompt used by classifier-free guidance. Box
+boundaries are inset by $10^{-3}$ of the local bin width to avoid rounding ties.
+Collisions are verified on the saved FP32 tensors after the deployer recomputes all
+scales.
+\end{flushleft}
+
+\section{Statistical Details}
+\label{app:stats}
+For a contrast with per-image differences $d_{ij}$ (seed $i$, prompt $j$), each
+bootstrap replicate draws seeds $i_1^*,\ldots,i_{12}^*$ and prompts
+$j_1^*,\ldots,j_{16}^*$ with replacement and averages $d$ over their Cartesian
+product~\cite{owen}; we use 5{,}000 replicates and percentile 95\% intervals. As a
+post-hoc sensitivity check, Bonferroni-adjusted intervals over the 18 honest
+deployment gaps of Table~\ref{tab:passive} have maximum upper bound 0.123. At a
+NudeNet threshold of 0.30, the full nudity erasure's detection rate is 0.266 in FP16,
+0.266 under simulated W8A8, and 0.260 under native INT8, against 0.807 for the
+original model.
+
+\section{Calibration-Draw Geometry}
+\label{app:geometry}
+If an attacker does not know the deployer's calibration, it can intersect the fixed
+scale boxes over $M$ calibration draws. For a coordinate with per-draw inverse bin
+widths $u_m$ and rounding residuals $r_m$, the intersection width is
+$\Drob=\min_m A_m+\min_m B_m$, with $A_m,B_m$ the capped distances to the lower and
+upper interval ends. Under a random-phase model with equal bin widths $D$,
+$\E[\Drob]=2D/(M+1)$. Table~\ref{tab:geometry} reports the median width relative to a
+weight-only INT8 bin on SD-1.5 key/value tensors. The ratio exceeds one only at
+$M=1$. A separate check on a single tensor compares the surrogate with the mean of
+$\Drob\bar u$ (width normalized by the mean bin width, not the table's median ratio to
+a weight-only bin): at $M=32$ it is 0.159 against 0.061 predicted, so the surrogate
+predicts the direction but not the tail. These results are
+superseded for security purposes by Proposition~\ref{prop:box}, which bounds every
+attacker by the deployer's own calibration box.
+
+\begin{table}[h]
+\centering
+\caption{Median collision width over $M$ calibration draws, relative to a
+weight-only INT8 bin (fixed scales, 64 examples per draw).}
+\label{tab:geometry}
+\begin{tabular}{rrrr}
+\toprule
+$M$ & $\alpha=0.50$ & $\alpha=0.75$ & $\alpha=0.85$\\
+\midrule
+\tableinput{data/geometry_rows.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Earlier Constructions}
+\label{app:earlier}
+Before the analysis of Section~\ref{sec:theory}, we evaluated coordinate-wise
+projections of the honest edit onto the fixed-scale box, with row caps but without
+column caps. A known-calibration variant ran two or 16 projection/recalibration
+iterations; hedged variants intersected 4 or 16 attacker draws. Because the
+migration scales move when column maxima change, code agreement after recalibration
+reached only 0.71 (two iterations) and 0.83--0.84 (16 iterations). Measured directly, the 16-step nudity
+checkpoint reproduces 10.7\% of the edit's key/value displacement on held-out
+prompts, in line with the projection column of Table~\ref{tab:capacity}. All of these
+constructions score close to the original model in FP16 (Table~\ref{tab:earlier}). The hedged variants were crafted with
+$\alpha=0.75$ but deployed with the executed default $\alpha=0.5$, and one
+exploratory selector used the deployer's calibration half. We therefore use none of
+them for claims beyond this appendix.
+
+\begin{table}[h]
+\centering
+\caption{Earlier constructions (192 images per cell; native-minus-FP16 gap with
+paired crossed 95\% interval). Honest FP16 references are 0.504 (style) and 0.176
+(nudity).}
+\label{tab:earlier}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrrrl}
+\toprule
+Construction & FP16 & Fake & Native & $\Delta$ & 95\% interval\\
+\midrule
+\tableinput{data/attack_rows.tex}
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\section{Native Execution and Activation Outliers}
+\label{app:native}
+An integer smoke test compares \texttt{torch.\_int\_mm} against an exact integer
+reference with zero difference. On all 32 key/value maps with synthetic inputs scaled
+to measured channel maxima, the median mean absolute difference between simulated and
+native W8A8 outputs is $3.74\times10^{-4}$, 1.3\% of the quantization error against an
+unquantized FP32 layer. A survey of 184 UNet linear maps over short denoising
+trajectories finds a max-to-median channel ratio of 11.6 on the edited maps, up to
+49.5 on feed-forward maps, and up to 2395 on time-conditioning projections.
+
+\section{Evaluation Corrections}
+\label{app:corrections}
+Three issues were found and corrected before the results reported here. An early
+wrapper promoted paths labeled FP16 to FP32; all reported runs use the corrected
+paths. The first behavioral scripts printed $\alpha=0.75$ but executed the default
+$\alpha=0.5$; every reported deployment uses 0.5, and constructions crafted at 0.75
+are confined to Appendix~\ref{app:earlier}. A threshold diagnostic compared a
+difference of means with a mean of differences; it is superseded by the audit of
+Section~\ref{sec:audit}. Honest FP16 references from separately executed GPU jobs
+differ slightly (e.g.\ 0.176 and 0.173 for full nudity erasure): each job recomputes
+the UCE edit on the GPU, with relative weight differences of order $10^{-3}$ between
+recomputations, and GPU kernels are not bitwise deterministic across sessions. All
+contrasts are paired within a job.

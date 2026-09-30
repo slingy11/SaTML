@@ -1,0 +1,258 @@
+{
+  "down_blocks.0.attentions.0.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.0.attentions.0.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.0.attentions.1.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.0.attentions.1.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.1.attentions.0.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.1.attentions.0.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.1.attentions.1.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.1.attentions.1.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.2.attentions.0.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.2.attentions.0.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.2.attentions.1.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "down_blocks.2.attentions.1.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.1.attentions.0.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.1.attentions.0.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.1.attentions.1.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.1.attentions.1.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.1.attentions.2.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.1.attentions.2.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.2.attentions.0.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.2.attentions.0.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.2.attentions.1.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.2.attentions.1.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.2.attentions.2.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.2.attentions.2.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.3.attentions.0.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.3.attentions.0.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.3.attentions.1.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.3.attentions.1.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.3.attentions.2.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "up_blocks.3.attentions.2.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "mid_block.attentions.0.transformer_blocks.0.attn2.to_k": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  },
+  "mid_block.attentions.0.transformer_blocks.0.attn2.to_v": {
+    "n_channels": 768,
+    "tensor_absmax": 33.09375,
+    "tail_sigma": 0.24866779148578644,
+    "outlier_ratio": 13.458300590515137,
+    "median_token_scale": 0.04103100299835205,
+    "cross_sample_cv": 0.24769309163093567
+  }
+}

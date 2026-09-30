@@ -1,0 +1,95 @@
+\section{When Can a Collision Carry an Erasure?}
+\label{sec:theory}
+\subsection{The exact deployed-collision set}
+A quantization-conditioned attack~\cite{egashira2024} ships weights that behave well
+in full precision but whose deployed form is a chosen malicious model. For erasure,
+the malicious deployed model is simply the quantized original. Let $\mathcal{Q}(W)$
+denote the dequantized weights the deployer obtains after recomputing every scale
+from the received $W$. We call $W_*$ a \emph{scale-preserving exact collision} if it
+induces the same migration and weight scales as $W_0$ and the same integer codes, so
+that $\mathcal{Q}(W_*)=\mathcal{Q}(W_0)$. Such a checkpoint deploys bit-for-bit as the
+quantized original; recovery is then guaranteed, and the only remaining question is
+whether it can look erased in FP16.
+
+\begin{proposition}[Pinned deployed-collision box]
+\label{prop:box}
+Fix the deployer's activation maxima $a$ and exponent $\alpha$. For
+W8A8 with migration~\eqref{eq:smooth} and per-row INT8 weights, $W$ is a
+scale-preserving exact collision with $W_0$ if and only if
+(i) every column maximum $\max_r|W_{rc}|$ equals that of $W_0$;
+(ii) every migrated row maximum $\max_c|W_{rc}s_c|$ equals that of $W_0$; and
+(iii) every coordinate lies in its original code interval
+$[(k_{rc}-\tfrac12)\sigma_r/s_c,\,(k_{rc}+\tfrac12)\sigma_r/s_c]$.
+Let $\pi_0$ fix, for every row and column, one coordinate at which $W_0$ attains the
+maximum. Up to rounding-tie conventions, the collisions that attain their maxima at
+$\pi_0$ form the box $\mathcal{B}_{\pi_0}$: the code intervals intersected with the
+column caps $|W_{rc}|\le\max_{r'}|W_{0,r'c}|$ and row caps $|W_{rc}|\le127\sigma_r/s_c$,
+with the coordinates of $\pi_0$ held at their original values. For weight-only
+round-to-nearest quantizers with per-row or per-group absmax scales (INT8, INT4,
+NF4~\cite{qlora}), the same holds with group caps and group arg-max coordinates in
+place of (i)--(ii).
+\end{proposition}
+\begin{proof}
+By~\eqref{eq:smooth}, $s_c$ depends on $W$ only through the column maximum, and
+$\sigma_r$ only through the migrated row maximum. Conditions (i)--(ii) are therefore
+equivalent to equality of all scales, and given equal scales, (iii) is equality of
+integer codes. The caps prevent a maximum from growing, and holding the coordinates of
+$\pi_0$ fixed keeps each maximum attained, so every point of $\mathcal{B}_{\pi_0}$ is a
+collision; conversely a collision attaining its maxima at $\pi_0$ satisfies every
+constraint of $\mathcal{B}_{\pi_0}$. Weight-only quantizers have a single absmax scale
+per group, giving the analogous box.
+\end{proof}
+
+The full collision set is the union of $\mathcal{B}_\pi$ over all admissible arg-max
+patterns $\pi$, and it need not be convex. For example, with $a=(1,1)$ and
+$\alpha=0.5$, the matrices with rows $(1,0.999),(0.999,1)$ and $(0.999,1),(1,0.999)$ are
+both collisions, but their midpoint has smaller column maxima and is not. All
+constructions and certificates below use the original pattern $\pi_0$, so their
+guarantees are statements about $\mathcal{B}_{\pi_0}$, not about the whole union.
+
+Condition (i) is easy to miss. Our earlier construction capped rows but not columns,
+so recalibrating on the crafted checkpoint moved the migration scales and code
+agreement plateaued at 0.83--0.84 after 16 iterations (Appendix~\ref{app:earlier}).
+With column caps, agreement after the deployer recalibrates is 1.0 for every tensor
+(Section~\ref{sec:feasibility}). Because the box is defined by the deployer's own
+statistics, a bound over $\mathcal{B}_{\pi_0}$ also covers attackers who do not know
+the calibration data but still produce a collision with pattern $\pi_0$. Attacks that instead \emph{change} the scales,
+such as outlier injection~\cite{zhan2026}, deploy to a different model and are
+outside this class (Section~\ref{sec:limits}).
+
+\subsection{Key/value outputs are a sufficient statistic}
+UCE and TIME modify only the cross-attention key and value maps
+$W\in\mathbb{R}^{d_o\times768}$. Their inputs are the text encoder's 77 token
+embeddings for the prompt and, under classifier-free guidance, for the empty prompt.
+Neither depends on the UNet, the latent, or the timestep. For a fixed prompt, seed,
+and scheduler, a generated image therefore depends on $W$ \emph{only through} the
+products $We$ over these embeddings. Two checkpoints with equal key/value outputs on
+a prompt produce identical images.
+
+The behavioral effect of an edit $\Delta=W_E-W_0$ is thus fully determined by its
+output displacement $\Delta E$, where $E$ stacks the relevant embeddings. We measure
+how closely a collision in $\mathcal{B}_{\pi_0}$ can reproduce this displacement:
+\begin{equation}
+ \rho^*=\min_{X\in\mathcal{B}_{\pi_0}-W_0}\frac{\|(X-\Delta)E\|_F}{\|\Delta E\|_F}.
+ \label{eq:capacity}
+\end{equation}
+This is a convex, row-separable quadratic program in the Gram metric $G=EE^\top$.
+Projecting $\Delta$ coordinate-wise onto the box, as in our earlier construction and
+in the repair step of prior quantization attacks, corresponds to $G=I$ and ignores
+that text embeddings are highly anisotropic. We solve~\eqref{eq:capacity} for each
+tensor with FISTA under a diagonal majorizer, and certify it with the Frank--Wolfe
+duality gap. The gap yields a \emph{lower} bound on $\rho^*$: no point of
+$\mathcal{B}_{\pi_0}$ reproduces this edit's key/value displacement on the fit prompts
+more closely, whatever optimizer is used. We call the minimizer the \emph{optimal
+reconstruction attack}. The bound concerns reconstruction of this particular edit, not
+behavior: a checkpoint could in principle suppress the concept through a different
+key/value displacement.
+
+\paragraph{From outputs to behavior}
+We report the explained fraction $f=\langle XE,\Delta E\rangle/\|\Delta E\|_F^2$ on
+held-out prompts. Full reproduction ($f\approx1$, small residual) implies FP16
+behavior close to the erasure by sufficiency. Partial reproduction carries no such
+implication. The honest ladder $W_0+t\Delta$ shows that suppression is a nonlinear
+function of the edit, and an attack's orthogonal residual can also matter. We
+therefore use~\eqref{eq:capacity} to construct the attack and to explain its outcome,
+and judge stealth only from measured behavior (Section~\ref{sec:behavior}).

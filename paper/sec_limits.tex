@@ -1,0 +1,43 @@
+\section{Limitations}
+\label{sec:limits}
+\paragraph{Attack class}
+Our certificate covers scale-preserving exact collisions that keep the original
+arg-max pattern ($\mathcal{B}_{\pi_0}$), and it bounds reconstruction of the honest
+edit's key/value displacement, not behavioral suppression in general. It does not
+cover collisions with a different arg-max pattern, checkpoints that suppress the
+concept through a different key/value displacement, attacks that change the
+quantization scales, such as outlier injection~\cite{zhan2026}, attacks that tolerate
+a fraction of mismatched codes, or quantizers with error feedback such as
+GPTQ~\cite{gptq}. The bound is certified on the fit prompts; on held-out prompts we
+report the measured residual. Our 8-bit results therefore show that the natural
+box-then-repair construction of prior work~\cite{egashira2024,egashira2025} fails
+for this recipe, not that no stealthy 8-bit attack exists.
+
+\paragraph{Models and editors}
+Behavior is measured for one base model (SD-1.5), one editor (UCE), and two concepts.
+TIME yields an essentially identical edit at our settings, so it adds no independent
+evidence. The analysis does not extend to fine-tuning editors such as ESD or MACE,
+whose edits reach layers whose inputs depend on the latent. For those layers the sufficiency argument of
+Section~\ref{sec:theory} does not apply and activation statistics change with the
+edit. Newer architectures with larger text encoders are untested.
+
+\paragraph{Quantization scope}
+The attack and the honest cross-attention study quantize the 32 edited maps. The
+whole-UNet W8A8 and 4-bit controls cover all 184 linear layers but not convolutions,
+and use 64 images per cell; the whole-UNet INT4 nudity increase in particular needs a
+powered follow-up. Our 4-bit recipes are round-to-nearest weight-only quantization;
+we do not evaluate a complete 4-bit diffusion pipeline such as
+Q-Diffusion~\cite{qdiffusion} or SVDQuant~\cite{svdquant}.
+
+\paragraph{Measurement}
+Detector scores are proxies. The style score is a seven-way CLIP softmax on selected
+captions; NudeNet's taxonomy does not capture context or harm. Prompts are purposively
+selected, so crossed-bootstrap intervals quantify sensitivity to the observed prompts
+and seeds, not coverage of all prompts. Intervals that contain zero are not
+equivalence claims. The honest style erasure is moderate (0.870 to 0.504 in FP16), and
+intermediate nudity depths have wider intervals than the endpoints.
+
+\paragraph{Shipping precision}
+Exact collisions require the checkpoint to be distributed in FP32. Casting the 8-bit
+attack checkpoints to FP16 leaves only 61\% of codes intact. The 4-bit attacks are
+more robust, keeping 96--98\% of codes, but lose the exact-collision guarantee. An attacker can ship FP32, so we do not count this as a defense.

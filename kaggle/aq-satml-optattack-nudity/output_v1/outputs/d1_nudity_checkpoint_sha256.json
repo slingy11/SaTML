@@ -1,0 +1,7 @@
+{
+  "d0_nudity_honest.safetensors": "e9245eb830dc3967b4154b98d10666fff250d1a6ae67d87f32d17532e24a3944",
+  "d0_nudity_int4_g128_opt.safetensors": "971b8f253de2d438472eb8d01d81fd25f28ff3ef2375973966483368d5e993ee",
+  "d0_nudity_int8_wo_opt.safetensors": "d8d86ebecedc57985e871adee350232214ba8c11d29c6cf354d496e83fddef74",
+  "d0_nudity_nf4_g64_opt.safetensors": "ad984518bd6522ed2d3e29fd488f1380ba5a9f4d9a54b7794f441e878310a0d8",
+  "d0_nudity_w8a8_sq_opt.safetensors": "3ffb6b8c8f31f0fa0f3b375e32f2fe0fc9f59a2d1271caeb1f4dde8881a0b38f"
+}

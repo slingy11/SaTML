@@ -1,0 +1,43 @@
+\section{Related Work}
+\label{sec:related}
+\paragraph{Quantization-conditioned attacks}
+Qu-ANTI-zation~\cite{hong2021} trains networks whose behavior changes under
+quantization. Egashira et al.~\cite{egashira2024} made the threat practical for LLMs:
+they inject a malicious behavior, compute the box of full-precision weights that
+quantize to the same model, and repair benign full-precision behavior by projected
+gradient descent inside it. The attack extends to data-dependent GGUF
+quantizers~\cite{egashira2025}, and outlier injection that deliberately changes
+quantization scales defeats AWQ and GPTQ~\cite{zhan2026}. Task-arithmetic
+defenses treat the quantization displacement as a malicious task
+vector~\cite{yang2026qvec}. Our construction is the erasure analogue of the
+box-then-optimize attack: the malicious model is the unedited original, and the benign
+repair is the honest erasure. Our certificate covers scale-preserving exact collisions
+with the original arg-max pattern. Scale-changing attacks such as outlier injection lie outside it and are
+the main open threat (\S\ref{sec:limits}).
+
+\paragraph{Quantization and unlearning}
+Zhang et al.~\cite{zhang2025} show that 4-bit weight quantization can restore
+knowledge removed by gradient-based LLM unlearning, because small unlearning updates
+fall within quantization bins. We measure the same passive mechanism for closed-form
+diffusion erasure, both as the fraction of edited coordinates whose codes revert and as
+the fraction of the edit's key/value output that survives quantization.
+
+\paragraph{Diffusion quantization}
+PTQ for diffusion models must handle timestep-varying activations and outlier
+channels~\cite{ptq4dm,qdiffusion}; 4-bit methods absorb outliers into low-rank
+branches~\cite{svdquant}. LLM methods such as SmoothQuant~\cite{smoothquant},
+AWQ~\cite{awq}, and GPTQ~\cite{gptq} shape the quantizer with calibration data.
+Asaria et al.~\cite{asaria2026} distinguish dequantized floating-point execution
+from native INT8 GEMM for a diffusion transformer. We use SmoothQuant-style W8A8 and
+round-to-nearest INT4/NF4 as analyzable recipes, not as throughput-optimized
+backends. GPTQ's sequential error feedback does not induce a coordinate-wise box and
+is not covered by our certificate.
+
+\paragraph{Concept erasure and its evaluation}
+Erasure methods include fine-tuning (ESD~\cite{esd}), closed-form cross-attention
+edits (TIME~\cite{time}, UCE~\cite{uce}), and multi-concept variants
+(MACE~\cite{mace}). Prompt-space attacks recover erased concepts through adversarial
+prompts or embeddings~\cite{pham2023,ringabell,unlearndiffatk}, and recent probes
+vary context, guidance, and trajectories~\cite{lu2025}. Those attacks hold the
+weights fixed and search over inputs. We hold prompts fixed and ask whether the
+deployment transformation of the weights can undo the edit, passively or by design.

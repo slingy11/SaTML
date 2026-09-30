@@ -1,0 +1,52 @@
+\section{Setting and Threat Model}
+\label{sec:setting}
+\paragraph{Models and edits}
+Let $W_0$ be the original key/value weights of Stable Diffusion~1.5~\cite{ldm},
+$W_E$ an honest UCE erasure~\cite{uce}, and $\Delta=W_E-W_0$ the edit. UCE redirects
+the last-token embeddings $c_i$ of the erased phrases toward a guide embedding $c^*$
+by the closed form
+\begin{equation}
+ W_E=\Big(\lambda W_0+s\sum_i W_0c^*c_i^\top\Big)\Big(\lambda I+s\sum_ic_ic_i^\top\Big)^{-1},
+\end{equation}
+so $\Delta$ has rank at most the number of phrases. We erase Van Gogh style (six
+phrases to ``art'', $s{=}2$, $\lambda{=}0.5$) and nudity (five phrases to ``person'',
+$s{=}1$, $\lambda{=}0.5$). For nudity we also evaluate the interpolation ladder
+$W_0+t\Delta$, $t\in\{0.15,0.3,0.5,0.75,1\}$, which spans a wide range of measured
+suppression.
+
+\paragraph{Deployment recipes}
+The main recipe is SmoothQuant-style W8A8~\cite{smoothquant} on the 32 edited
+maps: for calibration activation maxima $a_c$ and $\alpha=0.5$,
+\begin{equation}
+\begin{aligned}
+ s_c&=\frac{a_c^\alpha}{(\max_r|W_{rc}|)^{1-\alpha}},\\
+ W'&=W\operatorname{diag}(s),\quad X'=X\operatorname{diag}(s)^{-1},
+\end{aligned}
+ \label{eq:smooth}
+\end{equation}
+followed by symmetric per-row INT8 weights ($\sigma_r=\max_c|W'_{rc}|/127$) and
+dynamic per-token INT8 activations. The deployer recomputes $s$ and $\sigma$ from the
+received checkpoint, using 128 COCO captions as calibration data. We execute it three
+ways on identical prompts and seeds: checkpoint FP16, simulated W8A8 with FP16
+compute, and native INT8 GEMM with INT32 accumulation (\texttt{torch.\_int\_mm}). We
+additionally analyze weight-only per-row INT8, symmetric INT4 with groups of 128, and
+NF4~\cite{qlora} with groups of 64, all round-to-nearest. Whole-UNet controls quantize all
+184 UNet linear layers with W8A8, or weight-only INT4 and NF4 with groups of 64.
+
+\paragraph{Adversary}
+A supplier ships replacement key/value weights $W_*$; the deployer controls the
+quantizer and calibration data, and audits the received checkpoint in FP16 before
+deployment. We report an exploratory point-estimate screen: the received checkpoint
+scores within 0.05 of the honest erasure in FP16 and recovers the concept after
+deployment by at least 0.15 detector-score units:
+\begin{align}
+ \mu_{\FP}(W_*)&\le\mu_{\FP}(W_E)+0.05, \label{eq:stealth}\\
+ \mu_{Q}(W_*)&\ge\mu_{\FP}(W_*)+0.15, \label{eq:revival}
+\end{align}
+where $\mu_p$ is the observed mean over the fixed crossed prompt--seed cells. The
+0.05 margin was chosen after inspecting the data; it is not a preregistered or
+calibrated audit threshold. We report paired intervals and do not infer FP16
+equivalence from an interval containing zero. A checkpoint that fails
+Eq.~\eqref{eq:stealth} fails this descriptive screen, not necessarily an actual
+deployer audit. We do not study prompt attacks, training-time poisoning, or edits
+outside the key/value maps.

@@ -1,0 +1,15 @@
+{
+  "alpha": 0.5,
+  "n_cal": 64,
+  "max_iter": 16,
+  "M_values": [
+    1,
+    4,
+    16
+  ],
+  "calibration_pool": 256,
+  "attacker_half": 128,
+  "deployer_half": 128,
+  "selection": "per tensor, maximize deployed code agreement then edit retention; image outcomes unused",
+  "note": "M=1 known calibration; M=4/16 disjoint, recipe matched; no behavioral result in this job"
+}
