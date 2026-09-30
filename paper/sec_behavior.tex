@@ -38,7 +38,7 @@ The feasibility analysis explains this. W8A8 preserves more than 99.9\% of the
 honest edit's key/value displacement (Table~\ref{tab:capacity}, passive column):
 although 15\% of edited coordinates keep their original INT8 code, the
 coordinates that do change carry the edit. Coordinate reversion, the mechanism behind
-quantization-induced recovery in LLM unlearning~\cite{zhang2025}, therefore does not
+quantization-induced recovery in LLM unlearning~\cite{zhang2025}, does not
 imply output reversion for this rank-limited edit.
 
 \paragraph{Whole-UNet W8A8}
@@ -141,7 +141,7 @@ original model in FP16. At 8 bits the attack is already un-erased in FP16.}
 \end{figure*}
 
 Table~\ref{tab:attack} and Figure~\ref{fig:attack} give the behavioral verdict, which follows the feasibility
-analysis. \textbf{At 4 bits the attack succeeds for both concepts and both recipes.}
+analysis. At 4 bits the attack succeeds for both concepts and both recipes.
 In FP16 the crafted checkpoints have stealth contrasts of $-0.015$ and $+0.001$
 (style, INT4/NF4) and $-0.005$ and $+0.033$ (nudity). All four meet the exploratory
 point-estimate screen in Eq.~\eqref{eq:stealth}, but NF4 nudity is the weak case:
@@ -156,7 +156,7 @@ the INT4 attack's detection rate is 0.26 in FP16, equal to the honest erasure's,
 0.81 after deployment. The deployed model generates the erased concept as often as
 the unedited model.
 
-\textbf{At 8 bits the attack fails stealth, as predicted.} Reproducing 34--42\% of the
+At 8 bits the attack fails stealth, as predicted. Reproducing 34--42\% of the
 edit's key/value displacement leaves the checkpoint behaving almost like the original
 model in FP16 (0.843 style, 0.581 nudity), far above the honest erasure (stealth
 contrasts $+0.34$ and $+0.41$). Deployment adds little on top ($+0.03$ and $+0.01$).

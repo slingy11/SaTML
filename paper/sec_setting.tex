@@ -29,7 +29,7 @@ dynamic per-token INT8 activations. The deployer recomputes $s$ and $\sigma$ fro
 received checkpoint, using 128 COCO captions as calibration data. We execute it three
 ways on identical prompts and seeds: checkpoint FP16, simulated W8A8 with FP16
 compute, and native INT8 GEMM with INT32 accumulation (\texttt{torch.\_int\_mm}). We
-additionally analyze weight-only per-row INT8, symmetric INT4 with groups of 128, and
+also analyze weight-only per-row INT8, symmetric INT4 with groups of 128, and
 NF4~\cite{qlora} with groups of 64, all round-to-nearest. Whole-UNet controls quantize all
 184 UNet linear layers with W8A8, or weight-only INT4 and NF4 with groups of 64.
 

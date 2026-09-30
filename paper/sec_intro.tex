@@ -2,7 +2,7 @@
 Concept erasure edits a text-to-image model so that it stops producing a target
 concept, such as an artist's style or nudity. Erased checkpoints are audited in full
 precision, but they are often deployed after post-training quantization. The audited
-object and the deployed program therefore differ. Two failure modes follow. Passively,
+object and the deployed program differ. Two failure modes follow. Passively,
 quantization may round a small edit back toward the original weights, as reported for
 LLM unlearning at 4 bits~\cite{zhang2025}. Adversarially, a supplier may ship weights
 that look erased in full precision but deploy as the unedited model, extending

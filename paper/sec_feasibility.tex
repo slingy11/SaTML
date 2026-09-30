@@ -51,7 +51,7 @@ optimal reconstruction reproduces 34\% (style) and 42\% (nudity) of the edit's
 key/value displacement on held-out prompts, and the certificate is tight: no point of
 $\mathcal{B}_{\pi_0}$ attains a fit residual below 0.696 (style) or 0.639 (nudity),
 within $10^{-3}$ of what the solver achieves. Weight-only INT8 gives nearly identical numbers (34\% and 43\%). The barrier
-is therefore the resolution of the 8-bit grid, not SmoothQuant's activation-dependent
+is the resolution of the 8-bit grid, not SmoothQuant's activation-dependent
 migration; calibration dependence neither helps nor hurts the attacker appreciably.
 
 \paragraph{The earlier failure, explained}
@@ -76,7 +76,7 @@ At every precision, the honest edit's output displacement survives
 coordinates keep their original codes. The rank-limited closed-form edit is carried
 by coordinates with large, aligned changes, which do move to new codes. Coordinate
 reversion, the mechanism behind quantization-induced recovery of unlearned LLM
-knowledge~\cite{zhang2025}, therefore does not imply output reversion here.
+knowledge~\cite{zhang2025}, does not imply output reversion here.
 
 \paragraph{A second closed-form editor}
 We also computed the analysis for TIME~\cite{time} with the same phrase pairs. At these

@@ -52,8 +52,8 @@ Concept & Recipe & Original & Honest & Attack & Prop.~\ref{prop:audit}\\
 
 For honest erasure, $A$ is between 0.99 and 1.00 under every recipe: the erased
 checkpoint's key/value outputs on concept prompts move under quantization exactly as
-much as the base model's. The optimal attack gives $A=14.3$--$15.4$ at 8 bits and,
-more importantly, $A=2.2$--$3.3$ at 4 bits, where the attack succeeds behaviorally.
+much as the base model's. The optimal attack gives $A=14.3$--$15.4$ at 8 bits and
+$A=2.2$--$3.3$ at 4 bits, where the attack succeeds behaviorally.
 The 4-bit margin is smaller because the base model's own 4-bit quantization noise is
 comparable to the edit, but it is still more than twice the honest value. The bound
 of Proposition~\ref{prop:audit} at the measured residual (last column) is
@@ -65,9 +65,9 @@ margin; the separation we report there is empirical. A deployer holding the base
 Table~\ref{tab:attack} by comparing FP16 and quantized key/value outputs on a few
 concept prompts, without generating a single image.
 
-The audit is a diagnostic, not a certified defense: it separates the evaluated attacks
-from the evaluated honest checkpoints, and its false-positive rate across diverse
-honest edits is not established. An adversary could erase
+The audit is a diagnostic. It separates the evaluated attacks from the evaluated
+honest checkpoints, but its false-positive rate across diverse honest edits is not
+established, so it should not be read as a certified defense. An adversary could erase
 behavior through components the audit prompts do not exercise, or change the scales
 instead~\cite{zhan2026}. The statistic also presumes the deployer knows which concept
 was erased, which is usually stated on the model card. We report it because, unlike

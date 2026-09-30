@@ -4,7 +4,7 @@ reason can be computed before generating any images. For closed-form cross-atten
 edits, image behavior is a function of the key/value outputs, and the set of
 checkpoints that deploy exactly as the original is a box. Together these turn the
 reconstruction question into a certifiable convex program over the original-pattern
-box. At 8 bits that box is narrow: the best reconstruction reproduces about 40\% of the
+box. At 8 bits that box is narrow, and the best reconstruction reproduces about 40\% of the
 erasure's key/value effect, and the resulting checkpoint scores like the unedited model
 in FP16. At 4 bits it is wide enough that the constructed checkpoint scores close to
 the honest erasure in FP16 yet restores the erased concept after deployment. Honest erasures show no significant deployment gap at any tested

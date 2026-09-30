@@ -9,9 +9,9 @@ concept through a different key/value displacement, attacks that change the
 quantization scales, such as outlier injection~\cite{zhan2026}, attacks that tolerate
 a fraction of mismatched codes, or quantizers with error feedback such as
 GPTQ~\cite{gptq}. The bound is certified on the fit prompts; on held-out prompts we
-report the measured residual. Our 8-bit results therefore show that the natural
+report the measured residual. Our 8-bit results show that the natural
 box-then-repair construction of prior work~\cite{egashira2024,egashira2025} fails
-for this recipe, not that no stealthy 8-bit attack exists.
+for this recipe; they do not show that no stealthy 8-bit attack exists.
 
 \paragraph{Models and editors}
 Behavior is measured for one base model (SD-1.5), one editor (UCE), and two concepts.
@@ -33,7 +33,7 @@ Q-Diffusion~\cite{qdiffusion} or SVDQuant~\cite{svdquant}.
 Detector scores are proxies. The style score is a seven-way CLIP softmax on selected
 captions; NudeNet's taxonomy does not capture context or harm. Prompts are purposively
 selected, so crossed-bootstrap intervals quantify sensitivity to the observed prompts
-and seeds, not coverage of all prompts. Intervals that contain zero are not
+and seeds rather than coverage of all prompts. Intervals that contain zero are not
 equivalence claims. The honest style erasure is moderate (0.870 to 0.504 in FP16), and
 intermediate nudity depths have wider intervals than the endpoints.
 

@@ -42,7 +42,7 @@ this edit's key/value outputs, not optimal behavioral stealth. On Stable Diffusi
 with UCE erasure of Van Gogh style and nudity, the constructed 8-bit checkpoints,
 with or without SmoothQuant, reproduce 34--42\% of the erasure's measured key/value
 effect and score like the unedited model in FP16. At 4 bits (INT4 and NF4), the
-constructed checkpoints show substantial recovery: with 192 images
+constructed checkpoints show substantial recovery. With 192 images
 per condition from 12 crossed seeds and 16 prompts, the crafted nudity checkpoint
 scores 0.168 in FP16 against 0.173 for the honest erasure but 0.595 after
 quantization, matching the unedited model. Honest erasures show no
@@ -58,7 +58,7 @@ the honest value; it is not a calibrated general detector.
 Concept erasure edits a text-to-image model so that it stops producing a target
 concept, such as an artist's style or nudity. Erased checkpoints are audited in full
 precision, but they are often deployed after post-training quantization. The audited
-object and the deployed program therefore differ. Two failure modes follow. Passively,
+object and the deployed program differ. Two failure modes follow. Passively,
 quantization may round a small edit back toward the original weights, as reported for
 LLM unlearning at 4 bits~\cite{zhang2025}. Adversarially, a supplier may ship weights
 that look erased in full precision but deploy as the unedited model, extending
@@ -140,7 +140,7 @@ dynamic per-token INT8 activations. The deployer recomputes $s$ and $\sigma$ fro
 received checkpoint, using 128 COCO captions as calibration data. We execute it three
 ways on identical prompts and seeds: checkpoint FP16, simulated W8A8 with FP16
 compute, and native INT8 GEMM with INT32 accumulation (\texttt{torch.\_int\_mm}). We
-additionally analyze weight-only per-row INT8, symmetric INT4 with groups of 128, and
+also analyze weight-only per-row INT8, symmetric INT4 with groups of 128, and
 NF4~\cite{qlora} with groups of 64, all round-to-nearest. Whole-UNet controls quantize all
 184 UNet linear layers with W8A8, or weight-only INT4 and NF4 with groups of 64.
 
@@ -166,7 +166,7 @@ outside the key/value maps.
 \subsection{The exact deployed-collision set}
 A quantization-conditioned attack~\cite{egashira2024} ships weights that behave well
 in full precision but whose deployed form is a chosen malicious model. For erasure,
-the malicious deployed model is simply the quantized original. Let $\mathcal{Q}(W)$
+the malicious deployed model is the quantized original. Let $\mathcal{Q}(W)$
 denote the dequantized weights the deployer obtains after recomputing every scale
 from the received $W$. We call $W_*$ a \emph{scale-preserving exact collision} if it
 induces the same migration and weight scales as $W_0$ and the same integer codes, so
@@ -318,7 +318,7 @@ optimal reconstruction reproduces 34\% (style) and 42\% (nudity) of the edit's
 key/value displacement on held-out prompts, and the certificate is tight: no point of
 $\mathcal{B}_{\pi_0}$ attains a fit residual below 0.696 (style) or 0.639 (nudity),
 within $10^{-3}$ of what the solver achieves. Weight-only INT8 gives nearly identical numbers (34\% and 43\%). The barrier
-is therefore the resolution of the 8-bit grid, not SmoothQuant's activation-dependent
+is the resolution of the 8-bit grid, not SmoothQuant's activation-dependent
 migration; calibration dependence neither helps nor hurts the attacker appreciably.
 
 \paragraph{The earlier failure, explained}
@@ -343,7 +343,7 @@ At every precision, the honest edit's output displacement survives
 coordinates keep their original codes. The rank-limited closed-form edit is carried
 by coordinates with large, aligned changes, which do move to new codes. Coordinate
 reversion, the mechanism behind quantization-induced recovery of unlearned LLM
-knowledge~\cite{zhang2025}, therefore does not imply output reversion here.
+knowledge~\cite{zhang2025}, does not imply output reversion here.
 
 \paragraph{A second closed-form editor}
 We also computed the analysis for TIME~\cite{time} with the same phrase pairs. At these
@@ -403,7 +403,7 @@ The feasibility analysis explains this. W8A8 preserves more than 99.9\% of the
 honest edit's key/value displacement (Table~\ref{tab:capacity}, passive column):
 although 15\% of edited coordinates keep their original INT8 code, the
 coordinates that do change carry the edit. Coordinate reversion, the mechanism behind
-quantization-induced recovery in LLM unlearning~\cite{zhang2025}, therefore does not
+quantization-induced recovery in LLM unlearning~\cite{zhang2025}, does not
 imply output reversion for this rank-limited edit.
 
 \paragraph{Whole-UNet W8A8}
@@ -525,7 +525,7 @@ original model in FP16. At 8 bits the attack is already un-erased in FP16.}
 \end{figure*}
 
 Table~\ref{tab:attack} and Figure~\ref{fig:attack} give the behavioral verdict, which follows the feasibility
-analysis. \textbf{At 4 bits the attack succeeds for both concepts and both recipes.}
+analysis. At 4 bits the attack succeeds for both concepts and both recipes.
 In FP16 the crafted checkpoints have stealth contrasts of $-0.015$ and $+0.001$
 (style, INT4/NF4) and $-0.005$ and $+0.033$ (nudity). All four meet the exploratory
 point-estimate screen in Eq.~\eqref{eq:stealth}, but NF4 nudity is the weak case:
@@ -540,7 +540,7 @@ the INT4 attack's detection rate is 0.26 in FP16, equal to the honest erasure's,
 0.81 after deployment. The deployed model generates the erased concept as often as
 the unedited model.
 
-\textbf{At 8 bits the attack fails stealth, as predicted.} Reproducing 34--42\% of the
+At 8 bits the attack fails stealth, as predicted. Reproducing 34--42\% of the
 edit's key/value displacement leaves the checkpoint behaving almost like the original
 model in FP16 (0.843 style, 0.581 nudity), far above the honest erasure (stealth
 contrasts $+0.34$ and $+0.41$). Deployment adds little on top ($+0.03$ and $+0.01$).
@@ -610,8 +610,8 @@ Nudity & NF4, $g{=}64$ & 1.00 & 1.00 & 2.73 & 1.25 \\
 
 For honest erasure, $A$ is between 0.99 and 1.00 under every recipe: the erased
 checkpoint's key/value outputs on concept prompts move under quantization exactly as
-much as the base model's. The optimal attack gives $A=14.3$--$15.4$ at 8 bits and,
-more importantly, $A=2.2$--$3.3$ at 4 bits, where the attack succeeds behaviorally.
+much as the base model's. The optimal attack gives $A=14.3$--$15.4$ at 8 bits and
+$A=2.2$--$3.3$ at 4 bits, where the attack succeeds behaviorally.
 The 4-bit margin is smaller because the base model's own 4-bit quantization noise is
 comparable to the edit, but it is still more than twice the honest value. The bound
 of Proposition~\ref{prop:audit} at the measured residual (last column) is
@@ -623,9 +623,9 @@ margin; the separation we report there is empirical. A deployer holding the base
 Table~\ref{tab:attack} by comparing FP16 and quantized key/value outputs on a few
 concept prompts, without generating a single image.
 
-The audit is a diagnostic, not a certified defense: it separates the evaluated attacks
-from the evaluated honest checkpoints, and its false-positive rate across diverse
-honest edits is not established. An adversary could erase
+The audit is a diagnostic. It separates the evaluated attacks from the evaluated
+honest checkpoints, but its false-positive rate across diverse honest edits is not
+established, so it should not be read as a certified defense. An adversary could erase
 behavior through components the audit prompts do not exercise, or change the scales
 instead~\cite{zhan2026}. The statistic also presumes the deployer knows which concept
 was erased, which is usually stated on the model card. We report it because, unlike
@@ -662,7 +662,7 @@ branches~\cite{svdquant}. LLM methods such as SmoothQuant~\cite{smoothquant},
 AWQ~\cite{awq}, and GPTQ~\cite{gptq} shape the quantizer with calibration data.
 Asaria et al.~\cite{asaria2026} distinguish dequantized floating-point execution
 from native INT8 GEMM for a diffusion transformer. We use SmoothQuant-style W8A8 and
-round-to-nearest INT4/NF4 as analyzable recipes, not as throughput-optimized
+round-to-nearest INT4/NF4 because they are analyzable, and we make no claims about throughput-optimized
 backends. GPTQ's sequential error feedback does not induce a coordinate-wise box and
 is not covered by our certificate.
 
@@ -685,9 +685,9 @@ concept through a different key/value displacement, attacks that change the
 quantization scales, such as outlier injection~\cite{zhan2026}, attacks that tolerate
 a fraction of mismatched codes, or quantizers with error feedback such as
 GPTQ~\cite{gptq}. The bound is certified on the fit prompts; on held-out prompts we
-report the measured residual. Our 8-bit results therefore show that the natural
+report the measured residual. Our 8-bit results show that the natural
 box-then-repair construction of prior work~\cite{egashira2024,egashira2025} fails
-for this recipe, not that no stealthy 8-bit attack exists.
+for this recipe; they do not show that no stealthy 8-bit attack exists.
 
 \paragraph{Models and editors}
 Behavior is measured for one base model (SD-1.5), one editor (UCE), and two concepts.
@@ -709,7 +709,7 @@ Q-Diffusion~\cite{qdiffusion} or SVDQuant~\cite{svdquant}.
 Detector scores are proxies. The style score is a seven-way CLIP softmax on selected
 captions; NudeNet's taxonomy does not capture context or harm. Prompts are purposively
 selected, so crossed-bootstrap intervals quantify sensitivity to the observed prompts
-and seeds, not coverage of all prompts. Intervals that contain zero are not
+and seeds rather than coverage of all prompts. Intervals that contain zero are not
 equivalence claims. The honest style erasure is moderate (0.870 to 0.504 in FP16), and
 intermediate nudity depths have wider intervals than the endpoints.
 
@@ -723,7 +723,7 @@ reason can be computed before generating any images. For closed-form cross-atten
 edits, image behavior is a function of the key/value outputs, and the set of
 checkpoints that deploy exactly as the original is a box. Together these turn the
 reconstruction question into a certifiable convex program over the original-pattern
-box. At 8 bits that box is narrow: the best reconstruction reproduces about 40\% of the
+box. At 8 bits that box is narrow, and the best reconstruction reproduces about 40\% of the
 erasure's key/value effect, and the resulting checkpoint scores like the unedited model
 in FP16. At 4 bits it is wide enough that the constructed checkpoint scores close to
 the honest erasure in FP16 yet restores the erased concept after deployment. Honest erasures show no significant deployment gap at any tested
@@ -819,7 +819,7 @@ upper interval ends. Under a random-phase model with equal bin widths $D$,
 $\E[\Drob]=2D/(M+1)$. Table~\ref{tab:geometry} reports the median width relative to a
 weight-only INT8 bin on SD-1.5 key/value tensors. The ratio exceeds one only at
 $M=1$. A separate check on a single tensor compares the surrogate with the mean of
-$\Drob\bar u$ (width normalized by the mean bin width, not the table's median ratio to
+$\Drob\bar u$ (width normalized by the mean bin width rather than the table's median ratio to
 a weight-only bin): at $M=32$ it is 0.159 against 0.061 predicted, so the surrogate
 predicts the direction but not the tail. These results are
 superseded for security purposes by Proposition~\ref{prop:box}, which bounds every

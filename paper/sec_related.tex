@@ -29,7 +29,7 @@ branches~\cite{svdquant}. LLM methods such as SmoothQuant~\cite{smoothquant},
 AWQ~\cite{awq}, and GPTQ~\cite{gptq} shape the quantizer with calibration data.
 Asaria et al.~\cite{asaria2026} distinguish dequantized floating-point execution
 from native INT8 GEMM for a diffusion transformer. We use SmoothQuant-style W8A8 and
-round-to-nearest INT4/NF4 as analyzable recipes, not as throughput-optimized
+round-to-nearest INT4/NF4 because they are analyzable, and we make no claims about throughput-optimized
 backends. GPTQ's sequential error feedback does not induce a coordinate-wise box and
 is not covered by our certificate.
 

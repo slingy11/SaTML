@@ -3,7 +3,7 @@
 \subsection{The exact deployed-collision set}
 A quantization-conditioned attack~\cite{egashira2024} ships weights that behave well
 in full precision but whose deployed form is a chosen malicious model. For erasure,
-the malicious deployed model is simply the quantized original. Let $\mathcal{Q}(W)$
+the malicious deployed model is the quantized original. Let $\mathcal{Q}(W)$
 denote the dequantized weights the deployer obtains after recomputing every scale
 from the received $W$. We call $W_*$ a \emph{scale-preserving exact collision} if it
 induces the same migration and weight scales as $W_0$ and the same integer codes, so
